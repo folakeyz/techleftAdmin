@@ -10,6 +10,7 @@ import {
   CompanyClient,
   Adminstrator,
   TrialAccount,
+  Users,
 } from "./screens";
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
         />
         <Route path="/app/admin" eaxct element={<Adminstrator />} />
         <Route path="/app/trial" eaxct element={<TrialAccount />} />
+        <Route path="/app/users" eaxct element={<Users />} />
       </Routes>
     </Router>
   );

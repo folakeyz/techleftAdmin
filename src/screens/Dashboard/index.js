@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Card, Header, Navigation } from "../../components";
+import { AdminChart, Card, Header, List, Navigation } from "../../components";
 import { AiOutlineTeam } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBranch } from "../../redux/actions/branchActions";
@@ -8,6 +8,15 @@ import { fetchClient } from "../../redux/actions/clientActions";
 import { fetchEmployee } from "../../redux/actions/employeeActions";
 import { getallUsers } from "../../redux/actions/userActions";
 import { fetchEvent } from "../../redux/actions/eventActions";
+import {
+  FaExclamationTriangle,
+  FaRegBuilding,
+  FaRegFileArchive,
+  FaShapes,
+  FaUserFriends,
+  FaUsers,
+  FaUserShield,
+} from "react-icons/fa";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -37,6 +46,12 @@ const Dashboard = () => {
   const { events } = getEvent;
   const allUser = useSelector((state) => state.allUser);
   const { users = [] } = allUser;
+
+  const adminUser = users.filter((x) => x.is_superuser === true);
+  const nUser = users.filter(
+    (x) => x.is_superuser === false && x.is_trial === false
+  );
+  const trial = users.filter((x) => x.is_trial === true);
   return (
     <div className="appContainer">
       <Navigation />
@@ -46,32 +61,89 @@ const Dashboard = () => {
           <div className="screenOne">
             <div className="cardFlex">
               <Card
+                title="Total Admin"
+                count={adminUser?.length}
+                url="/"
+                Icon={FaUserShield}
+                color="gold"
+                primary="lightGold"
+              />
+              <Card
                 title="Total Users"
-                count={2}
+                count={nUser?.length}
                 url="/"
                 Icon={AiOutlineTeam}
                 color="blue"
                 primary="cyan"
               />
               <Card
-                title="Total Admin"
-                count={2}
+                title="Trial Accounts"
+                count={trial?.length}
                 url="/"
-                Icon={AiOutlineTeam}
+                Icon={FaExclamationTriangle}
+                color="purple"
+                primary="dpurple"
+              />
+              <Card
+                title="Total Employees"
+                count={employees?.length}
+                url="/"
+                Icon={FaUsers}
+                color="crimson"
+                primary="red"
+              />
+              <Card
+                title="Total Departments"
+                count={departments?.length}
+                url="/"
+                Icon={FaRegBuilding}
+                color="purple"
+                primary="dpurple"
+              />
+              <Card
+                title="Total Branch"
+                count={branches?.length}
+                url="/"
+                Icon={FaShapes}
+                color="crimson"
+                primary="red"
+              />
+              <Card
+                title="Total Clients"
+                count={clients?.length}
+                url="/"
+                Icon={FaUserFriends}
                 color="gold"
                 primary="lightGold"
               />
               <Card
-                title="Total Admin"
-                count={2}
+                title="Total Events"
+                count={events?.length}
                 url="/"
-                Icon={AiOutlineTeam}
-                color="magenta"
-                primary="crimson"
+                Icon={FaRegFileArchive}
+                color="blue"
+                primary="cyan"
               />
             </div>
           </div>
-          <div className="screenTwo"></div>
+          <div className="screenTwo">
+            <div className="content">
+              <div className="contentTitle">
+                <h3>Recent Activity</h3>
+              </div>
+              <List name="......." url="/app/dashboard" />
+              <List name="......." url="/app/dashboard" />
+              <List name="......." url="/app/dashboard" />
+            </div>
+          </div>
+        </div>
+        <div className="reports">
+          <div className="charts">
+            <AdminChart users={users} />
+          </div>
+          <div className="charts">
+            <AdminChart users={users} />
+          </div>
         </div>
       </div>
     </div>

@@ -150,8 +150,6 @@ const Adminstrator = () => {
     setLastname("");
   };
 
-  console.log(open);
-
   return (
     <div className="appContainer">
       <Navigation />

@@ -17,3 +17,5 @@ export { default as Greeting } from "./Greeting";
 export { default as MenuBar } from "./MenuBar";
 export { default as Hero } from "./Hero";
 export { default as Features } from "./Features";
+export { default as AdminChart } from "./Chart";
+export { default as List } from "./List";

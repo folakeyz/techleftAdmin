@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "./styles.module.css";
 import { AiOutlineTeam, AiOutlineAppstore } from "react-icons/ai";
-import { FaUserShield, FaSignOutAlt } from "react-icons/fa";
+import { FaUserShield, FaSignOutAlt, FaUser, FaBuilding } from "react-icons/fa";
 // import { BsBuilding, BsBezier } from 'react-icons/bs'
 // import { FaUserShield, FaRegCalendarAlt, FaRegCalendarCheck, FaSignOutAlt, FaChevronDown } from 'react-icons/fa'
 import { Link, useNavigate } from "react-router-dom";
@@ -37,7 +37,13 @@ const Navigation = () => {
           </li>
           <li>
             <Link to="/app/companies">
-              <AiOutlineTeam />
+              <FaBuilding />
+              Companies
+            </Link>
+          </li>
+          <li>
+            <Link to="/app/users">
+              <FaUser />
               Users
             </Link>
           </li>
