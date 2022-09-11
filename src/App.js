@@ -1,24 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  Dashboard,
+  Login,
+  Companies,
+  ViewCompany,
+  CompanyEmployee,
+  CompanyBranch,
+  CompanyDepartment,
+  CompanyClient,
+  Adminstrator,
+  TrialAccount,
+} from "./screens";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" eaxct element={<Login />} />
+        <Route path="/app/dashboard" eaxct element={<Dashboard />} />
+        <Route path="/app/companies" eaxct element={<Companies />} />
+        <Route path="/app/companies/:id" eaxct element={<ViewCompany />} />
+        <Route
+          path="/app/company/employee/:id"
+          eaxct
+          element={<CompanyEmployee />}
+        />
+        <Route
+          path="/app/company/branch/:id"
+          eaxct
+          element={<CompanyBranch />}
+        />
+        <Route
+          path="/app/company/department/:id"
+          eaxct
+          element={<CompanyDepartment />}
+        />
+        <Route
+          path="/app/company/client/:id"
+          eaxct
+          element={<CompanyClient />}
+        />
+        <Route path="/app/admin" eaxct element={<Adminstrator />} />
+        <Route path="/app/trial" eaxct element={<TrialAccount />} />
+      </Routes>
+    </Router>
   );
 }
 
