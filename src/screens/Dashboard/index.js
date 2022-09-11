@@ -1,8 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, Header, Navigation } from "../../components";
 import { AiOutlineTeam } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBranch } from "../../redux/actions/branchActions";
+import { fetchDepartment } from "../../redux/actions/departmentActions";
+import { fetchClient } from "../../redux/actions/clientActions";
+import { fetchEmployee } from "../../redux/actions/employeeActions";
+import { getallUsers } from "../../redux/actions/userActions";
+import { fetchEvent } from "../../redux/actions/eventActions";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchBranch());
+    dispatch(fetchDepartment());
+    dispatch(fetchClient());
+    dispatch(fetchEmployee());
+    dispatch(getallUsers());
+    dispatch(fetchEvent());
+  }, [dispatch]);
+
+  const getBranch = useSelector((state) => state.getBranch);
+  const { branches = [] } = getBranch;
+  const getClient = useSelector((state) => state.getClient);
+  const { clients = [] } = getClient;
+  const getDepartment = useSelector((state) => state.getDepartment);
+  const { departments = [] } = getDepartment;
+  const getEmployee = useSelector((state) => state.getEmployee);
+  const { employees = [] } = getEmployee;
+
+  const userProfile = useSelector((state) => state.userProfile);
+  const { user = {} } = userProfile;
+
+  const getEvent = useSelector((state) => state.getEvent);
+  const { events } = getEvent;
+  const allUser = useSelector((state) => state.allUser);
+  const { users = [] } = allUser;
   return (
     <div className="appContainer">
       <Navigation />
