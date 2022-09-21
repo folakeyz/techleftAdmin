@@ -10,7 +10,8 @@ import {
   updateMeReducer,
   userRegReducer,
   userDemoReducer,
-  JoinReducer
+  JoinReducer,
+  deleteUserReducer,
 } from "./reducers/userReducers";
 import {
   addCompanyReducer,
@@ -82,6 +83,12 @@ import {
   getReportReducer,
   updateReportReducer,
 } from "./reducers/reportReducers";
+import { getLogReducer } from "./reducers/logReducers";
+import {
+  activateReducer,
+  deactivateReducer,
+  getTrialReducer,
+} from "./reducers/trialReducers";
 
 const reducer = combineReducers({
   userLogin: authReducer,
@@ -93,6 +100,7 @@ const reducer = combineReducers({
   userProfile: getMeReducer,
   updateUser: updateMeReducer,
   allUser: allUserReducer,
+  deleteUser: deleteUserReducer,
   addCompany: addCompanyReducer,
   getCompany: getCompanyReducer,
   updateCompany: updateCompanyReducer,
@@ -141,6 +149,10 @@ const reducer = combineReducers({
   removeReport: deleteReportReducer,
   updateReport: updateReportReducer,
   generateReport: genReportReducer,
+  getLogs: getLogReducer,
+  activate: activateReducer,
+  deleteTrial: deactivateReducer,
+  getTrialA: getTrialReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")

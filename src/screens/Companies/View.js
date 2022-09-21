@@ -53,7 +53,6 @@ const ViewCompany = () => {
   const myDept = departments?.filter((x) => x.company?.id === parseInt(id));
   const myClient = clients?.filter((x) => x.company === parseInt(id));
   const myEvents = events?.filter((x) => x.company?.id === parseInt(id));
-  console.log(events);
   return (
     <div className="appContainer">
       <Navigation />

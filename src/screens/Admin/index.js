@@ -7,10 +7,15 @@ import MaterialTable from "material-table";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@chakra-ui/react";
 import { getMyCompany } from "../../redux/actions/companyActions";
-import { getallUsers, RegisterUser } from "../../redux/actions/userActions";
+import {
+  getallUsers,
+  RegisterUser,
+  removeUser,
+} from "../../redux/actions/userActions";
 import swal from "sweetalert";
 import {
   CREATE_ACCOUNT_RESET,
+  DELETE_USER_RESET,
   UPDATE_ME_RESET,
 } from "../../redux/constants/userConstants";
 
@@ -35,7 +40,10 @@ const Adminstrator = () => {
   const userRegister = useSelector((state) => state.userRegister);
   const { loading, success, error } = userRegister;
   const updateUser = useSelector((state) => state.updateUser);
-  const { uLoading, success: uSuccess, error: uError } = updateUser;
+  const { loading: uLoading, success: uSuccess, error: uError } = updateUser;
+  const deleteUser = useSelector((state) => state.deleteUser);
+  const { loading: dLoading, success: dSuccess, error: dError } = deleteUser;
+
   const adminUser = users.filter((x) => x.is_superuser === true);
 
   const [first_name, setFirstname] = useState("");
@@ -47,7 +55,6 @@ const Adminstrator = () => {
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
   const is_superuser = true;
-  const is_staff = true;
 
   if (error) {
     toast({
@@ -60,6 +67,7 @@ const Adminstrator = () => {
     });
     dispatch({ type: CREATE_ACCOUNT_RESET });
   }
+
   if (uError) {
     toast({
       title: "Error",
@@ -71,7 +79,21 @@ const Adminstrator = () => {
     });
     dispatch({ type: UPDATE_ME_RESET });
   }
+
+  if (dError) {
+    toast({
+      title: "Error",
+      description: dError,
+      status: "error",
+      duration: 9000,
+      isClosable: true,
+      position: "top-right",
+    });
+    dispatch({ type: DELETE_USER_RESET });
+  }
+
   if (success) {
+    setOpen(false);
     toast({
       title: "Notification",
       description: "Admin added Successfully",
@@ -80,7 +102,7 @@ const Adminstrator = () => {
       isClosable: true,
       position: "top-right",
     });
-    setOpen(false);
+    navigate("/app/dashboard");
     dispatch(getallUsers());
     dispatch({ type: CREATE_ACCOUNT_RESET });
   }
@@ -96,6 +118,19 @@ const Adminstrator = () => {
     setOpen(false);
     dispatch(getallUsers());
     dispatch({ type: UPDATE_ME_RESET });
+  }
+
+  if (dSuccess) {
+    toast({
+      title: "Notification",
+      description: "Deleted Successfully",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+      position: "top-right",
+    });
+    dispatch(getallUsers());
+    dispatch({ type: DELETE_USER_RESET });
   }
   // Login Handler
   const submitHandler = (e) => {
@@ -117,8 +152,7 @@ const Adminstrator = () => {
           last_name,
           email,
           password,
-          is_superuser,
-          is_staff
+          is_superuser
         )
       );
     }
@@ -137,7 +171,7 @@ const Adminstrator = () => {
       buttons: true,
     }).then((willDelete) => {
       if (willDelete) {
-        // dispatch(deleteDepartment(id));
+        dispatch(removeUser(id));
       }
     });
   };

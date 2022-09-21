@@ -10,19 +10,16 @@ import {
   CREATE_ACCOUNT_RESET,
   UPDATE_ME_RESET,
 } from "../../redux/constants/userConstants";
-import {
-  deleteAccount,
-  fetchTrial,
-  patchAccount,
-} from "../../redux/actions/trialActions";
+import { deleteAccount, patchAccount } from "../../redux/actions/trialActions";
 import {
   ACTIVATE_ACCT_RESET,
   DELETE_ACCT_RESET,
 } from "../../redux/constants/trialConstants";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const TrialAccount = () => {
-  const navigate = useNavigate();
+const ViewTrialAccount = () => {
+  const { id } = useParams();
+  //const navigate = useNavigate();
   //Table data
   const columns = [
     { title: "Name", field: "full_name" },
@@ -35,7 +32,6 @@ const TrialAccount = () => {
 
   useEffect(() => {
     dispatch(getallUsers());
-    dispatch(fetchTrial());
   }, [dispatch]);
   const allUser = useSelector((state) => state.allUser);
   const { users = [] } = allUser;
@@ -44,15 +40,9 @@ const TrialAccount = () => {
   const { loading, success, error } = activate;
   const deleteTrial = useSelector((state) => state.deleteTrial);
   const { uLoading, success: uSuccess, error: uError } = deleteTrial;
-  const adminUser = users.filter(
-    (x) => x.is_trial === true && x.user?.is_active === true
-  );
-
-  const getTrialA = useSelector((state) => state.getTrialA);
-  const { trial } = getTrialA;
+  const adminUser = users.find((x) => x.id === parseInt(id));
 
   console.log(adminUser);
-  console.log(trial);
 
   if (error) {
     toast({
@@ -162,79 +152,7 @@ const TrialAccount = () => {
               <CircularProgress isIndeterminate color="blue" />
             </Center>
           ) : (
-            <MaterialTable
-              title=""
-              columns={columns}
-              data={adminUser}
-              options={{
-                // filtering: true,
-                exportAllData: true,
-                exportButton: true,
-                actionsCellStyle: {
-                  backgroundColor: "none",
-                  color: "#FF00dd",
-                },
-                actionsColumnIndex: -1,
-
-                headerStyle: {
-                  backgroundColor: "#dcdcdc",
-                  color: "black",
-                },
-              }}
-              style={{
-                boxShadow: "none",
-                width: "100%",
-                background: "none",
-                fontSize: "13px",
-              }}
-              actions={[
-                {
-                  icon: "launch",
-                  iconProps: { style: { fontSize: "20px", color: "gold" } },
-                  tooltip: "View",
-                  onClick: (event, rowData) => {
-                    navigate(`/app/trial/${rowData.id}`);
-                  },
-                  title: "View",
-                  color: "color2",
-                  Icon: FaCogs,
-                },
-                // {
-                //   icon: "launch",
-                //   iconProps: { style: { fontSize: "20px", color: "gold" } },
-                //   tooltip: "deactivate",
-                //   onClick: (event, rowData) => {
-                //     deactivateHandler(rowData.id);
-                //   },
-                //   title: "Deactivate Account",
-                //   color: "color2",
-                //   Icon: FaCogs,
-                // },
-
-                {
-                  icon: "launch",
-                  iconProps: { style: { fontSize: "15px", color: "gold" } },
-                  tooltip: "Delete",
-                  onClick: (event, rowData) => {
-                    deleteHandler(rowData.id);
-                  },
-                  title: "Delete Account",
-                  color: "color3",
-                  Icon: FaTrash,
-                },
-              ]}
-              components={{
-                Action: (props) => (
-                  <button
-                    onClick={(event) => props.action.onClick(event, props.data)}
-                    className={`btnTable ${props.action.color}`}
-                  >
-                    <props.action.Icon />
-                    {props.action.title}
-                  </button>
-                ),
-              }}
-            />
+            <div></div>
           )}
         </div>
       </div>
@@ -242,4 +160,4 @@ const TrialAccount = () => {
   );
 };
 
-export default TrialAccount;
+export default ViewTrialAccount;

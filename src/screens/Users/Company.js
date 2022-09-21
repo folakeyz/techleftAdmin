@@ -1,33 +1,21 @@
 import React, { useEffect } from "react";
-import { Header, Navigation } from "../../components";
+import { Header, Navigation, MenuBar } from "../../components";
+//import { useNavigate } from "react-router-dom";
 import { FaCogs, FaTrash } from "react-icons/fa";
 import MaterialTable from "material-table";
 import { useDispatch, useSelector } from "react-redux";
-import { Center, CircularProgress, useToast } from "@chakra-ui/react";
-import { getallUsers } from "../../redux/actions/userActions";
+import { useToast } from "@chakra-ui/react";
+import { getallUsers, removeUser } from "../../redux/actions/userActions";
 import swal from "sweetalert";
-import {
-  CREATE_ACCOUNT_RESET,
-  UPDATE_ME_RESET,
-} from "../../redux/constants/userConstants";
-import {
-  deleteAccount,
-  fetchTrial,
-  patchAccount,
-} from "../../redux/actions/trialActions";
-import {
-  ACTIVATE_ACCT_RESET,
-  DELETE_ACCT_RESET,
-} from "../../redux/constants/trialConstants";
-import { useNavigate } from "react-router-dom";
+import { getMyCompany } from "../../redux/actions/companyActions";
+import { Center, CircularProgress } from "@chakra-ui/react";
+import { DELETE_USER_RESET } from "../../redux/constants/userConstants";
+import { patchAccount } from "../../redux/actions/trialActions";
+import { ACTIVATE_ACCT_RESET } from "../../redux/constants/trialConstants";
 
-const TrialAccount = () => {
-  const navigate = useNavigate();
+const CompanyUsers = () => {
+  // const navigate = useNavigate();
   //Table data
-  const columns = [
-    { title: "Name", field: "full_name" },
-    { title: "Email", field: "email" },
-  ];
 
   // Helpers
   const dispatch = useDispatch();
@@ -35,73 +23,116 @@ const TrialAccount = () => {
 
   useEffect(() => {
     dispatch(getallUsers());
-    dispatch(fetchTrial());
+    dispatch(getMyCompany());
   }, [dispatch]);
   const allUser = useSelector((state) => state.allUser);
   const { users = [] } = allUser;
-
-  const activate = useSelector((state) => state.activate);
-  const { loading, success, error } = activate;
-  const deleteTrial = useSelector((state) => state.deleteTrial);
-  const { uLoading, success: uSuccess, error: uError } = deleteTrial;
-  const adminUser = users.filter(
-    (x) => x.is_trial === true && x.user?.is_active === true
+  const nUser = users.filter(
+    (x) =>
+      x.is_superuser === false && x.is_trial === false && x.is_staff === true
   );
 
-  const getTrialA = useSelector((state) => state.getTrialA);
-  const { trial } = getTrialA;
+  const getCompany = useSelector((state) => state.getCompany);
+  const { myCompany } = getCompany;
 
-  console.log(adminUser);
-  console.log(trial);
+  const deleteUser = useSelector((state) => state.deleteUser);
+  const { loading, success, error } = deleteUser;
 
-  if (error) {
-    toast({
-      title: "Error",
-      description: error,
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-      position: "top-right",
+  const activate = useSelector((state) => state.activate);
+  const { loading: aLoading, success: aSuccess, error: aError } = activate;
+
+  // Menubar Items
+  const menu = [
+    { name: "Company Admin", url: "/app/users/company", active: true },
+    { name: "All Employees", url: "/app/users" },
+  ];
+
+  const deleteHandler = (id) => {
+    swal({
+      title: "Are you sure you want to delete this user?",
+      text: "All accounts associated with this user would be deleted",
+      icon: "warning",
+      dangerMode: true,
+      buttons: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        swal({
+          title: "You are sure you want to delete",
+          text: "All accounts associated with this user would be deleted",
+          icon: "warning",
+          dangerMode: true,
+          buttons: true,
+        }).then((willDelete) => {
+          if (willDelete) {
+            dispatch(removeUser(id));
+          }
+        });
+      }
     });
-    dispatch({ type: ACTIVATE_ACCT_RESET });
-  }
-  if (uError) {
-    toast({
-      title: "Error",
-      description: uError,
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-      position: "top-right",
-    });
-    dispatch({ type: DELETE_ACCT_RESET });
-  }
+  };
+
+  const getUserCompany = (id) => {
+    const name = myCompany?.find((x) => x.admin === parseInt(id));
+    return name?.name;
+  };
+  const getCompEmp = (id) => {
+    const name = myCompany?.find((x) => x.admin === parseInt(id));
+    return name?.employees.length;
+  };
+
+  const columns = [
+    { title: "Fullname", field: "full_name" },
+    { title: "Email", field: "email" },
+    {
+      title: "Company",
+      field: "",
+      render: (rowData) => getUserCompany(rowData.id),
+    },
+    {
+      title: "Employees",
+      field: "",
+      render: (rowData) => getCompEmp(rowData.id),
+    },
+  ];
+
   if (success) {
     toast({
       title: "Notification",
-      description: "Success",
+      description: "User Deleted Successfully",
       status: "success",
       duration: 9000,
       isClosable: true,
       position: "top-right",
     });
+    dispatch(getallUsers());
+    dispatch({ type: DELETE_USER_RESET });
+  }
 
+  if (aSuccess) {
+    toast({
+      title: "Notification",
+      description: "Deactivated Successfully",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+      position: "top-right",
+    });
     dispatch(getallUsers());
     dispatch({ type: ACTIVATE_ACCT_RESET });
   }
-  if (uSuccess) {
+  if (error || aError) {
     toast({
       title: "Notification",
-      description: "Success",
-      status: "success",
+      description: error || aError,
+      status: "error",
       duration: 9000,
       isClosable: true,
       position: "top-right",
     });
-    dispatch(getallUsers());
-    dispatch({ type: DELETE_ACCT_RESET });
+    dispatch({ type: DELETE_USER_RESET });
+    dispatch({ type: ACTIVATE_ACCT_RESET });
   }
-  // Login Handler
+
   const deactivateHandler = (id) => {
     let is_trial = true;
     swal({
@@ -116,48 +147,14 @@ const TrialAccount = () => {
       }
     });
   };
-
-  const activateHandler = (id) => {
-    let is_trial = false;
-    swal({
-      title: "Are you sure?",
-      text: "Are you want to activate this account",
-      icon: "warning",
-      // dangerMode: true,
-      buttons: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        dispatch(patchAccount(id, is_trial));
-      }
-    });
-  };
-
-  const deleteHandler = (id) => {
-    swal({
-      title: "Are you sure?",
-      text: "Are you sure you want to delete this",
-      icon: "warning",
-      dangerMode: true,
-      buttons: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        dispatch(deleteAccount(id));
-      }
-    });
-  };
-
   return (
     <div className="appContainer">
       <Navigation />
       <div className="contentsRight">
-        <Header title="Trial Account" />
+        <Header title="Users" />
         <div>
-          {/* <div className="btnContainer right">
-            <button className="btn color2" onClick={openHandler}>
-              Create Admin
-            </button>
-          </div> */}
-          {loading || uLoading ? (
+          <MenuBar menu={menu} />
+          {loading || aLoading ? (
             <Center>
               <CircularProgress isIndeterminate color="blue" />
             </Center>
@@ -165,7 +162,7 @@ const TrialAccount = () => {
             <MaterialTable
               title=""
               columns={columns}
-              data={adminUser}
+              data={nUser}
               options={{
                 // filtering: true,
                 exportAllData: true,
@@ -191,26 +188,14 @@ const TrialAccount = () => {
                 {
                   icon: "launch",
                   iconProps: { style: { fontSize: "20px", color: "gold" } },
-                  tooltip: "View",
+                  tooltip: "Manage",
                   onClick: (event, rowData) => {
-                    navigate(`/app/trial/${rowData.id}`);
+                    deactivateHandler(rowData.id);
                   },
-                  title: "View",
+                  title: "Make Trial",
                   color: "color2",
                   Icon: FaCogs,
                 },
-                // {
-                //   icon: "launch",
-                //   iconProps: { style: { fontSize: "20px", color: "gold" } },
-                //   tooltip: "deactivate",
-                //   onClick: (event, rowData) => {
-                //     deactivateHandler(rowData.id);
-                //   },
-                //   title: "Deactivate Account",
-                //   color: "color2",
-                //   Icon: FaCogs,
-                // },
-
                 {
                   icon: "launch",
                   iconProps: { style: { fontSize: "15px", color: "gold" } },
@@ -218,7 +203,7 @@ const TrialAccount = () => {
                   onClick: (event, rowData) => {
                     deleteHandler(rowData.id);
                   },
-                  title: "Delete Account",
+                  title: "Delete",
                   color: "color3",
                   Icon: FaTrash,
                 },
@@ -242,4 +227,4 @@ const TrialAccount = () => {
   );
 };
 
-export default TrialAccount;
+export default CompanyUsers;

@@ -42,7 +42,7 @@ const Navigation = () => {
             </Link>
           </li>
           <li>
-            <Link to="/app/users">
+            <Link to="/app/users/company">
               <FaUser />
               Users
             </Link>
@@ -51,6 +51,12 @@ const Navigation = () => {
             <Link to="/app/admin">
               <FaUserShield />
               Admin
+            </Link>
+          </li>
+          <li>
+            <Link to="/app/demo">
+              <AiOutlineTeam />
+              Request for Demo
             </Link>
           </li>
           <li>

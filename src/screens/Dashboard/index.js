@@ -17,6 +17,7 @@ import {
   FaUsers,
   FaUserShield,
 } from "react-icons/fa";
+import { fetchLogs } from "../../redux/actions/logActions";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ const Dashboard = () => {
     dispatch(fetchEmployee());
     dispatch(getallUsers());
     dispatch(fetchEvent());
+    dispatch(fetchLogs());
   }, [dispatch]);
 
   const getBranch = useSelector((state) => state.getBranch);
@@ -46,12 +48,16 @@ const Dashboard = () => {
   const { events } = getEvent;
   const allUser = useSelector((state) => state.allUser);
   const { users = [] } = allUser;
+  const getLogs = useSelector((state) => state.getLogs);
+  const { logs = [] } = getLogs;
 
   const adminUser = users.filter((x) => x.is_superuser === true);
   const nUser = users.filter(
-    (x) => x.is_superuser === false && x.is_trial === false
+    (x) =>
+      x.is_superuser === false && x.is_trial === false && x.is_staff === true
   );
   const trial = users.filter((x) => x.is_trial === true);
+
   return (
     <div className="appContainer">
       <Navigation />
@@ -61,7 +67,7 @@ const Dashboard = () => {
           <div className="screenOne">
             <div className="cardFlex">
               <Card
-                title="Total Admin"
+                title="Total Super Admin"
                 count={adminUser?.length}
                 url="/"
                 Icon={FaUserShield}
@@ -69,7 +75,7 @@ const Dashboard = () => {
                 primary="lightGold"
               />
               <Card
-                title="Total Users"
+                title="Total Admin"
                 count={nUser?.length}
                 url="/"
                 Icon={AiOutlineTeam}
@@ -131,9 +137,12 @@ const Dashboard = () => {
               <div className="contentTitle">
                 <h3>Recent Activity</h3>
               </div>
-              <List name="......." url="/app/dashboard" />
-              <List name="......." url="/app/dashboard" />
-              <List name="......." url="/app/dashboard" />
+              {logs
+                ?.map((item, i) => (
+                  <List name={item.message} key={i} url="/app/dashboard" />
+                ))
+                .reverse()
+                .slice(0, 4)}
             </div>
           </div>
         </div>

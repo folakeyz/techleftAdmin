@@ -28,6 +28,9 @@ import {
   JOIN_FAIL,
   JOIN_REQUEST,
   JOIN_SUCCESS,
+  DELETE_USER_FAIL,
+  DELETE_USER_REQUEST,
+  DELETE_USER_SUCCESS,
 } from "../constants/userConstants";
 import { BASE_URL } from "../config";
 
@@ -98,15 +101,17 @@ export const getMe = () => async (dispatch, getState) => {
 };
 
 export const RegisterUser =
-  (username, first_name, last_name, email, password, is_superuser, is_staff) =>
-  async (dispatch) => {
+  (username, first_name, last_name, email, password, is_superuser) =>
+  async (dispatch, getState) => {
     try {
       dispatch({ type: CREATE_ACCOUNT_REQUEST });
-
+      const {
+        userLogin: { userInfo },
+      } = getState();
       const config = {
         headers: {
           "Content-Type": "application/json",
-          // "Access-Control-Allow-Origin": "*",
+          Authorization: `Bearer ${userInfo.access}`,
         },
       };
       const { data } = await axios.post(
@@ -118,7 +123,6 @@ export const RegisterUser =
           email,
           password,
           is_superuser,
-          is_staff,
         },
         config
       );
@@ -350,3 +354,33 @@ export const AcceptInvite =
       });
     }
   };
+
+export const removeUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: DELETE_USER_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.access}`,
+      },
+    };
+    const { data } = await axios.delete(`${BASE_URL}/user/${id}/`, config);
+    dispatch({
+      type: DELETE_USER_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: DELETE_USER_FAIL,
+      payload:
+        error.response && error.response.data.detail
+          ? error.response.data.detail
+          : error.message,
+    });
+  }
+};

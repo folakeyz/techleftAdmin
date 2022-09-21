@@ -4,7 +4,8 @@ import ReactECharts from "echarts-for-react";
 const AdminChart = ({ users }) => {
   const adminUser = users.filter((x) => x.is_superuser === true);
   const nUser = users.filter(
-    (x) => x.is_superuser === false && x.is_trial === false
+    (x) =>
+      x.is_superuser === false && x.is_trial === false && x.is_staff === true
   );
   const trial = users.filter((x) => x.is_trial === true);
   const option = {
@@ -32,7 +33,7 @@ const AdminChart = ({ users }) => {
       {
         type: "category",
         // prettier-ignore
-        data: ["Admin", "Users", "Trial Account"],
+        data: ["Super Admin", "Admin", "Trial Account"],
       },
     ],
     yAxis: [

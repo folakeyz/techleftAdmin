@@ -7,5 +7,8 @@ export { default as CompanyBranch } from "./Companies/Branch";
 export { default as CompanyDepartment } from "./Companies/Department";
 export { default as CompanyClient } from "./Companies/Client";
 export { default as Adminstrator } from "./Admin";
+export { default as DemoAccount } from "./Demo";
 export { default as TrialAccount } from "./Trial";
+export { default as ViewTrialAccount } from "./Trial/View";
 export { default as Users } from "./Users";
+export { default as CompanyUsers } from "./Users/Company";

@@ -21,12 +21,15 @@ import {
 } from "../../redux/constants/trialConstants";
 import { useNavigate } from "react-router-dom";
 
-const TrialAccount = () => {
+const DemoAccount = () => {
   const navigate = useNavigate();
   //Table data
   const columns = [
-    { title: "Name", field: "full_name" },
-    { title: "Email", field: "email" },
+    { title: "Name", field: "user.full_name" },
+    { title: "Email", field: "user.email" },
+    { title: "Number", field: "number" },
+    { title: "Industry", field: "industry" },
+    { title: "Location", field: "location" },
   ];
 
   // Helpers
@@ -44,14 +47,13 @@ const TrialAccount = () => {
   const { loading, success, error } = activate;
   const deleteTrial = useSelector((state) => state.deleteTrial);
   const { uLoading, success: uSuccess, error: uError } = deleteTrial;
-  const adminUser = users.filter(
-    (x) => x.is_trial === true && x.user?.is_active === true
-  );
 
   const getTrialA = useSelector((state) => state.getTrialA);
-  const { trial } = getTrialA;
+  const { trial = [] } = getTrialA;
 
-  console.log(adminUser);
+  const trialUser = trial.filter((x) => x.user?.is_active === false);
+
+  //   console.log(adminUser);
   console.log(trial);
 
   if (error) {
@@ -150,7 +152,7 @@ const TrialAccount = () => {
     <div className="appContainer">
       <Navigation />
       <div className="contentsRight">
-        <Header title="Trial Account" />
+        <Header title="Request for Demo" />
         <div>
           {/* <div className="btnContainer right">
             <button className="btn color2" onClick={openHandler}>
@@ -165,7 +167,7 @@ const TrialAccount = () => {
             <MaterialTable
               title=""
               columns={columns}
-              data={adminUser}
+              data={trialUser}
               options={{
                 // filtering: true,
                 exportAllData: true,
@@ -242,4 +244,4 @@ const TrialAccount = () => {
   );
 };
 
-export default TrialAccount;
+export default DemoAccount;

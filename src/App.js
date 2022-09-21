@@ -11,6 +11,9 @@ import {
   Adminstrator,
   TrialAccount,
   Users,
+  CompanyUsers,
+  ViewTrialAccount,
+  DemoAccount,
 } from "./screens";
 
 function App() {
@@ -43,7 +46,10 @@ function App() {
         />
         <Route path="/app/admin" eaxct element={<Adminstrator />} />
         <Route path="/app/trial" eaxct element={<TrialAccount />} />
+        <Route path="/app/trial/:id" eaxct element={<ViewTrialAccount />} />
         <Route path="/app/users" eaxct element={<Users />} />
+        <Route path="/app/users/company" eaxct element={<CompanyUsers />} />
+        <Route path="/app/demo" eaxct element={<DemoAccount />} />
       </Routes>
     </Router>
   );
