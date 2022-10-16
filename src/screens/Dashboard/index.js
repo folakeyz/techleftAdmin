@@ -38,11 +38,11 @@ const Dashboard = () => {
   const { clients = [] } = getClient;
   const getDepartment = useSelector((state) => state.getDepartment);
   const { departments = [] } = getDepartment;
-  const getEmployee = useSelector((state) => state.getEmployee);
-  const { employees = [] } = getEmployee;
+  // const getEmployee = useSelector((state) => state.getEmployee);
+  // const { employees = [] } = getEmployee;
 
-  const userProfile = useSelector((state) => state.userProfile);
-  const { user = {} } = userProfile;
+  // const userProfile = useSelector((state) => state.userProfile);
+  // const { user = {} } = userProfile;
 
   const getEvent = useSelector((state) => state.getEvent);
   const { events } = getEvent;
@@ -57,7 +57,12 @@ const Dashboard = () => {
       x.is_superuser === false && x.is_trial === false && x.is_staff === true
   );
   const trial = users.filter((x) => x.is_trial === true);
+  const nUsers = users.filter(
+    (x) =>
+      x.is_superuser === false && x.is_trial === false && x.is_staff === false
+  );
 
+  console.log(events);
   return (
     <div className="appContainer">
       <Navigation />
@@ -92,7 +97,7 @@ const Dashboard = () => {
               />
               <Card
                 title="Total Employees"
-                count={employees?.length}
+                count={nUsers?.length}
                 url="/"
                 Icon={FaUsers}
                 color="crimson"

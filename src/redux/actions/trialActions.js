@@ -16,6 +16,7 @@ export const patchAccount =
   (
     id,
 
+    is_active,
     is_trial
   ) =>
   async (dispatch, getState) => {
@@ -35,6 +36,7 @@ export const patchAccount =
       const { data } = await axios.patch(
         `${BASE_URL}/user/${id}/`,
         {
+          is_active,
           is_trial,
         },
         config

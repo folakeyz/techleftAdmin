@@ -185,17 +185,17 @@ const CompanyUsers = () => {
                 fontSize: "13px",
               }}
               actions={[
-                {
-                  icon: "launch",
-                  iconProps: { style: { fontSize: "20px", color: "gold" } },
-                  tooltip: "Manage",
-                  onClick: (event, rowData) => {
-                    deactivateHandler(rowData.id);
-                  },
-                  title: "Make Trial",
-                  color: "color2",
-                  Icon: FaCogs,
-                },
+                // {
+                //   icon: "launch",
+                //   iconProps: { style: { fontSize: "20px", color: "gold" } },
+                //   tooltip: "Manage",
+                //   onClick: (event, rowData) => {
+                //     deactivateHandler(rowData.id);
+                //   },
+                //   title: "Make Trial",
+                //   color: "color2",
+                //   Icon: FaCogs,
+                // },
                 {
                   icon: "launch",
                   iconProps: { style: { fontSize: "15px", color: "gold" } },

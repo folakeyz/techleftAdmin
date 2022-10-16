@@ -28,7 +28,7 @@ const DemoAccount = () => {
     { title: "Name", field: "user.full_name" },
     { title: "Email", field: "user.email" },
     { title: "Number", field: "number" },
-    { title: "Industry", field: "industry" },
+    { title: "Company", field: "industry" },
     { title: "Location", field: "location" },
   ];
 
@@ -54,7 +54,6 @@ const DemoAccount = () => {
   const trialUser = trial.filter((x) => x.user?.is_active === false);
 
   //   console.log(adminUser);
-  console.log(trial);
 
   if (error) {
     toast({
@@ -88,7 +87,7 @@ const DemoAccount = () => {
       position: "top-right",
     });
 
-    dispatch(getallUsers());
+    dispatch(fetchTrial());
     dispatch({ type: ACTIVATE_ACCT_RESET });
   }
   if (uSuccess) {
@@ -100,7 +99,7 @@ const DemoAccount = () => {
       isClosable: true,
       position: "top-right",
     });
-    dispatch(getallUsers());
+    dispatch(fetchTrial());
     dispatch({ type: DELETE_ACCT_RESET });
   }
   // Login Handler
@@ -120,16 +119,17 @@ const DemoAccount = () => {
   };
 
   const activateHandler = (id) => {
-    let is_trial = false;
+    let is_active = true;
+    let is_trial = true;
     swal({
       title: "Are you sure?",
-      text: "Are you want to activate this account",
+      text: "Are you want to activate this account as trial",
       icon: "warning",
       // dangerMode: true,
       buttons: true,
     }).then((willDelete) => {
       if (willDelete) {
-        dispatch(patchAccount(id, is_trial));
+        dispatch(patchAccount(id, is_active, is_trial));
       }
     });
   };
@@ -193,11 +193,12 @@ const DemoAccount = () => {
                 {
                   icon: "launch",
                   iconProps: { style: { fontSize: "20px", color: "gold" } },
-                  tooltip: "View",
+                  tooltip: "Activate",
                   onClick: (event, rowData) => {
-                    navigate(`/app/trial/${rowData.id}`);
+                    // navigate(`/app/trial/${rowData.id}`);
+                    activateHandler(rowData?.user?.id);
                   },
-                  title: "View",
+                  title: "Activate Trial",
                   color: "color2",
                   Icon: FaCogs,
                 },
@@ -218,7 +219,7 @@ const DemoAccount = () => {
                   iconProps: { style: { fontSize: "15px", color: "gold" } },
                   tooltip: "Delete",
                   onClick: (event, rowData) => {
-                    deleteHandler(rowData.id);
+                    deleteHandler(rowData.user?.id);
                   },
                   title: "Delete Account",
                   color: "color3",

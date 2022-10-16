@@ -25,8 +25,10 @@ const TrialAccount = () => {
   const navigate = useNavigate();
   //Table data
   const columns = [
-    { title: "Name", field: "full_name" },
-    { title: "Email", field: "email" },
+    { title: "Name", field: "user.full_name" },
+    { title: "Email", field: "user.email" },
+    { title: "Company", field: "industry" },
+    { title: "Location", field: "location" },
   ];
 
   // Helpers
@@ -37,21 +39,18 @@ const TrialAccount = () => {
     dispatch(getallUsers());
     dispatch(fetchTrial());
   }, [dispatch]);
-  const allUser = useSelector((state) => state.allUser);
-  const { users = [] } = allUser;
 
   const activate = useSelector((state) => state.activate);
   const { loading, success, error } = activate;
   const deleteTrial = useSelector((state) => state.deleteTrial);
   const { uLoading, success: uSuccess, error: uError } = deleteTrial;
-  const adminUser = users.filter(
-    (x) => x.is_trial === true && x.user?.is_active === true
+  const getTrialA = useSelector((state) => state.getTrialA);
+  const { trial = [] } = getTrialA;
+  const adminUser = trial.filter(
+    (x) => x.user?.is_trial === true && x.user?.is_active === true
   );
 
-  const getTrialA = useSelector((state) => state.getTrialA);
-  const { trial } = getTrialA;
-
-  console.log(adminUser);
+  //console.log(adminUser);
   console.log(trial);
 
   if (error) {
@@ -118,6 +117,7 @@ const TrialAccount = () => {
   };
 
   const activateHandler = (id) => {
+    let is_active = true;
     let is_trial = false;
     swal({
       title: "Are you sure?",
@@ -127,7 +127,7 @@ const TrialAccount = () => {
       buttons: true,
     }).then((willDelete) => {
       if (willDelete) {
-        dispatch(patchAccount(id, is_trial));
+        dispatch(patchAccount(id, is_active, is_trial));
       }
     });
   };
@@ -191,32 +191,21 @@ const TrialAccount = () => {
                 {
                   icon: "launch",
                   iconProps: { style: { fontSize: "20px", color: "gold" } },
-                  tooltip: "View",
+                  tooltip: "Activate",
                   onClick: (event, rowData) => {
-                    navigate(`/app/trial/${rowData.id}`);
+                    activateHandler(rowData.user?.id);
                   },
-                  title: "View",
+                  title: "Activate Account",
                   color: "color2",
                   Icon: FaCogs,
                 },
-                // {
-                //   icon: "launch",
-                //   iconProps: { style: { fontSize: "20px", color: "gold" } },
-                //   tooltip: "deactivate",
-                //   onClick: (event, rowData) => {
-                //     deactivateHandler(rowData.id);
-                //   },
-                //   title: "Deactivate Account",
-                //   color: "color2",
-                //   Icon: FaCogs,
-                // },
 
                 {
                   icon: "launch",
                   iconProps: { style: { fontSize: "15px", color: "gold" } },
                   tooltip: "Delete",
                   onClick: (event, rowData) => {
-                    deleteHandler(rowData.id);
+                    deleteHandler(rowData.user?.id);
                   },
                   title: "Delete Account",
                   color: "color3",
